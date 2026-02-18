@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TAB | Trusted AI Broker Dashboard</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #0d1117; color: #58a6ff; padding: 40px; }
+        .container { max-width: 800px; margin: auto; border: 1px solid #30363d; padding: 20px; border-radius: 8px; }
+        h1 { color: #f0f6fc; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #21262d; }
+        th { color: #8b949e; text-transform: uppercase; font-size: 12px; }
+        .score { color: #3fb950; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TAB Performance Log</h1>
+        <p>Live AI-Broker Paper Trading (Solana)</p>
+        <table id="tradeTable">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Asset</th>
+                    <th>Entry Price</th>
+                    <th>Vibe Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Fetch the trades.json file from your repo
+        fetch('trades.json')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#tradeTable tbody');
+                data.reverse().forEach(trade => {
+                    const row = `<tr>
+                        <td>${trade.time}</td>
+                        <td>${trade.symbol}</td>
+                        <td>$${parseFloat(trade.price).toFixed(6)}</td>
+                        <td class="score">${trade.vibe_score}/100</td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            })
+            .catch(err => console.log('Waiting for first trade...'));
+    </script>
+</body>
+</html>
