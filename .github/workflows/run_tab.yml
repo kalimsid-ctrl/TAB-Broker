@@ -1,22 +1,29 @@
 name: TAB Market Eye
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *' # Runs every 6 hours
-  workflow_dispatch: # Allows you to run it manually
+    - cron: '0 */6 * * *'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.11'
       - name: Install dependencies
         run: pip install google-generativeai requests
       - name: Run TAB Agent
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python tab_agent.py
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "TAB-Broker-Bot"
+          git config --global user.email "action@github.com"
+          git add trades.json
+          git commit -m "TAB: Logged new paper trades" || echo "No changes to commit"
+          git push
